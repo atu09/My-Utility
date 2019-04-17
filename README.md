@@ -1,4 +1,4 @@
-# My-Utility
+# MyUtility
 
 [![](https://jitpack.io/v/atu09/My-Utility.svg)](https://jitpack.io/#atu09/My-Utility)
 
