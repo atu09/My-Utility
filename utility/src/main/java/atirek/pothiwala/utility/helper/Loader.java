@@ -33,7 +33,7 @@ public class Loader {
         this.onCancelListener = onCancelListener;
     }
 
-    public void show() {
+    public Dialog getDialog() {
 
         Window window = dialog.getWindow();
         if (window != null) {
@@ -57,7 +57,7 @@ public class Loader {
         dialog.setCancelable(onCancelListener != null);
         dialog.setOnCancelListener(onCancelListener);
 
-        dialog.show();
+        return dialog;
     }
 
     private int getColor(@ColorRes int color) {
