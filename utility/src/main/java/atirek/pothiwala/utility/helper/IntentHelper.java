@@ -40,9 +40,7 @@ public class IntentHelper {
     }
 
     public static void checkLog(String TAG, Object data) {
-        if (BuildConfig.DEBUG) {
-            Log.d(TAG + ">>", data.toString());
-        }
+        Log.d(TAG + ">>", data.toString());
     }
 
     public static void popToast(Context context, Object data) {

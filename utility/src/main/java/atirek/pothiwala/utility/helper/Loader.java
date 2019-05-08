@@ -22,7 +22,7 @@ public class Loader {
 
     public Loader(Context context) {
         this.context = context;
-        dialog = new Dialog(context);
+        this.dialog = new Dialog(context);
     }
 
     public void setColor(@ColorRes int color) {

@@ -29,9 +29,10 @@ public class FusedLocationHelper extends Service {
 
     private Context context;
     private String TAG;
+    private boolean enableDebug;
 
     private void checkLog(Object data) {
-        if (BuildConfig.DEBUG) {
+        if (enableDebug){
             Log.d(TAG + ">>", data.toString());
         }
     }
@@ -48,9 +49,13 @@ public class FusedLocationHelper extends Service {
     private FusedLocationProviderClient locationProviderClient;
     private LocationListener listener;
 
-    public FusedLocationHelper(Context context, String TAG, LocationListener listener) {
+    public FusedLocationHelper(Context context, String TAG, boolean enableDebug) {
         this.context = context;
         this.TAG = TAG;
+        this.enableDebug = enableDebug;
+    }
+
+    public void setListener(LocationListener listener) {
         this.listener = listener;
     }
 
