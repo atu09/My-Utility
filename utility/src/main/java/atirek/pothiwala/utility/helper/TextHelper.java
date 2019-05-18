@@ -1,9 +1,12 @@
 package atirek.pothiwala.utility.helper;
 
 import android.content.Context;
+import android.graphics.Paint;
 import android.graphics.Typeface;
 import android.os.Build;
+import android.support.annotation.FontRes;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.content.res.ResourcesCompat;
 import android.text.Html;
 import android.text.Spannable;
@@ -11,6 +14,7 @@ import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.TextPaint;
 import android.text.style.MetricAffectingSpan;
+import android.widget.TextView;
 
 import java.text.NumberFormat;
 import java.util.Currency;
@@ -20,7 +24,7 @@ import static android.text.Html.FROM_HTML_MODE_LEGACY;
 
 public class TextHelper {
 
-    public static String capitalizeWord(String text) {
+    public static String capitalizeWord(@Nullable String text) {
 
         if (text == null) {
             return "";
@@ -49,7 +53,7 @@ public class TextHelper {
         return stringBuilder.toString().trim();
     }
 
-    public static String capitalizeSentence(String text) {
+    public static String capitalizeSentence(@Nullable String text) {
 
         if (text == null) {
             return "";
@@ -58,40 +62,40 @@ public class TextHelper {
         }
 
         // Create a char array of given String
-        char ch[] = text.toCharArray();
+        char charArray[] = text.toCharArray();
         for (int i = 0; i < text.length(); i++) {
 
             // If first character of a word is found
-            if (i == 0 && ch[i] != ' ' ||
-                    ch[i] != ' ' && ch[i - 1] == ' ') {
+            if (i == 0 && charArray[i] != ' ' ||
+                    charArray[i] != ' ' && charArray[i - 1] == ' ') {
 
                 // If it is in lower-case
-                if (ch[i] >= 'a' && ch[i] <= 'z') {
+                if (charArray[i] >= 'a' && charArray[i] <= 'z') {
 
                     // Convert into Upper-case
-                    ch[i] = (char) (ch[i] - 'a' + 'A');
+                    charArray[i] = (char) (charArray[i] - 'a' + 'A');
                 }
             }
 
             // If apart from first character
             // Any one is in Upper-case
-            else if (ch[i] >= 'A' && ch[i] <= 'Z')
+            else if (charArray[i] >= 'A' && charArray[i] <= 'Z')
 
                 // Convert into Lower-Case
-                ch[i] = (char) (ch[i] + 'a' - 'A');
+                charArray[i] = (char) (charArray[i] + 'a' - 'A');
         }
         // Convert the char array to equivalent String
-        return new String(ch);
+        return new String(charArray);
     }
 
-    public static String getCurrencyFormat(String currencyFormat, double value) {
+    public static String getCurrencyFormat(@NonNull String currencyFormat, double value) {
         Currency usd = Currency.getInstance(currencyFormat);
         NumberFormat format = NumberFormat.getCurrencyInstance(Locale.ENGLISH);
         format.setCurrency(usd);
         return format.format(value);
     }
 
-    public static SpannableString getStyle(Context context, String currentString, int font) {
+    public static SpannableString getStyle(@NonNull Context context, @NonNull String currentString, @FontRes int font) {
 
         SpannableString updatedString = new SpannableString(currentString);
         final Typeface custom_font = ResourcesCompat.getFont(context, font);
@@ -116,6 +120,14 @@ public class TextHelper {
             return Html.fromHtml(html, FROM_HTML_MODE_LEGACY);
         } else {
             return Html.fromHtml(html);
+        }
+    }
+
+    public static void strikeTextView(@NonNull TextView view, boolean strike) {
+        if (strike) {
+            view.setPaintFlags(view.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+        } else {
+            view.setPaintFlags(view.getPaintFlags());
         }
     }
 }
