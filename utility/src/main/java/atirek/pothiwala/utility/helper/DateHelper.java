@@ -8,16 +8,23 @@ import android.view.Gravity;
 import android.view.Window;
 import android.widget.LinearLayout;
 
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 import java.util.TimeZone;
 
+import static atirek.pothiwala.utility.helper.DateHelper.DateFormat.dd_MMM_yyyy;
+
 public class DateHelper {
 
-    public static String getFormatDateText(@NonNull String date, @NonNull String fromFormat, @NonNull String toFormat) {
+    public interface DateFormat {
+        String dd_MMM_yyyy = "dd MMM, yyyy";
+        String HH_mm_a = "HH:mm a";
+        String hh_mm = "hh:mm";
+    }
+
+    public static String getDate(@NonNull String date, @NonNull String fromFormat, @NonNull String toFormat) {
 
         try {
             SimpleDateFormat format = new SimpleDateFormat(fromFormat, Locale.getDefault());
@@ -25,18 +32,18 @@ public class DateHelper {
             format.applyPattern(toFormat);
             return format.format(dateInstance);
 
-        } catch (ParseException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return null;
     }
 
-    public static Date getFormatDateText(@NonNull String date, @NonNull String fromFormat) {
+    public static Date getDate(@NonNull String date, @NonNull String fromFormat) {
 
         try {
             SimpleDateFormat format = new SimpleDateFormat(fromFormat, Locale.getDefault());
             return format.parse(date);
-        } catch (ParseException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return null;
@@ -59,18 +66,18 @@ public class DateHelper {
         return dialog;
     }
 
-    public static String getDateText(@NonNull String dateText, @NonNull String fromFormat) {
+    public static String getOnlyDate(@NonNull String dateText, @NonNull String fromFormat) {
 
-        Date targetDate = getFormatDateText(dateText, fromFormat);
+        Date targetDate = getDate(dateText, fromFormat);
         if (targetDate != null){
-            return getDateText(targetDate);
+            return getOnlyDate(targetDate);
         }
         return null;
     }
 
-    public static String getDateText(@NonNull Date targetDate) {
+    public static String getOnlyDate(@NonNull Date targetDate) {
 
-        SimpleDateFormat dateFormatter = new SimpleDateFormat("dd MMM, yyyy", Locale.getDefault());
+        SimpleDateFormat dateFormatter = new SimpleDateFormat(dd_MMM_yyyy, Locale.getDefault());
 
         Calendar targetCalendar = Calendar.getInstance(TimeZone.getDefault(), Locale.getDefault());
         targetCalendar.setTime(targetDate);
@@ -133,6 +140,16 @@ public class DateHelper {
         }
 
         return returnDate;
+
+    }
+
+    public String getDate(@NonNull Date targetDate, @NonNull String toFormat) {
+
+        SimpleDateFormat dateFormatter = new SimpleDateFormat(toFormat, Locale.getDefault());
+        Calendar targetCalendar = Calendar.getInstance(TimeZone.getDefault(), Locale.getDefault());
+        targetCalendar.setTime(targetDate);
+
+        return dateFormatter.format(targetDate);
 
     }
 }

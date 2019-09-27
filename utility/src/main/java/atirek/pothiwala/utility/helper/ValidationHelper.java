@@ -15,7 +15,7 @@ import static atirek.pothiwala.utility.helper.ValidationHelper.ErrorText.require
 
 public class ValidationHelper {
 
-    interface ErrorText {
+    public interface ErrorText {
         String cannotBeEmpty = "This field cannot be empty.";
         String noSpaces = "This field cannot not contain spaces.";
         String invalidEmail = "Email address is invalid.";
@@ -56,7 +56,7 @@ public class ValidationHelper {
         return true;
     }
 
-    public static boolean isValidPhoneNumber(EditText editText) {
+    public static boolean isValidPhoneNumber(EditText editText, int limit) {
         String string = editText.getText().toString().trim();
         String expression = "[0-9]+";
         Pattern pattern = Pattern.compile(expression, Pattern.CASE_INSENSITIVE);
@@ -65,8 +65,8 @@ public class ValidationHelper {
             editText.setError(cannotBeEmpty);
             editText.requestFocus();
             return false;
-        } else if (string.length() < 4) {
-            editText.setError(String.format(Locale.getDefault(), requiresDigits, 4));
+        } else if (string.length() < limit) {
+            editText.setError(String.format(Locale.getDefault(), requiresDigits, limit));
             editText.requestFocus();
             return false;
         } else if (string.contains(" ")) {
@@ -79,6 +79,10 @@ public class ValidationHelper {
             return false;
         }
         return true;
+    }
+
+    public static boolean isValidPhoneNumber(EditText editText) {
+        return isValidPhoneNumber(editText, 10);
     }
 
     public static boolean isValidString(EditText editText, int length) {
