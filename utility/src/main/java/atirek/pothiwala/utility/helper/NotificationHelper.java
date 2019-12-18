@@ -5,6 +5,7 @@ import android.app.NotificationManager;
 import android.content.Context;
 import android.graphics.Color;
 import android.os.Build;
+import android.provider.Settings;
 import android.support.annotation.ColorRes;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
@@ -39,22 +40,21 @@ public class NotificationHelper {
 
     public void showNotification(@NonNull Integer notificationId, @NonNull String title, @NonNull String message, @DrawableRes int icon) {
 
-        if (notificationManager != null) {
+         if (notificationManager != null) {
 
-            NotificationCompat.Builder builder;
+            NotificationCompat.Builder builder = new NotificationCompat.Builder(context, channel);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 NotificationChannel notificationChannel = new NotificationChannel(channel, channel, NotificationManager.IMPORTANCE_HIGH);
                 notificationChannel.enableLights(lights);
                 notificationChannel.enableVibration(vibrations);
                 notificationChannel.setLightColor(color);
-                builder = new NotificationCompat.Builder(context, notificationChannel.getId());
-            } else {
-                builder = new NotificationCompat.Builder(context);
+                notificationManager.createNotificationChannel(notificationChannel);
             }
 
             builder.setSmallIcon(icon)
                     .setContentTitle(title)
                     .setContentText(message)
+                    .setSound(Settings.System.DEFAULT_NOTIFICATION_URI)
                     .setAutoCancel(true)
                     .setOnlyAlertOnce(true)
                     .setShowWhen(true);
