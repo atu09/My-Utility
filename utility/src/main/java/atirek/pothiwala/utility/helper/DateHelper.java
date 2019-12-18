@@ -19,6 +19,7 @@ import static atirek.pothiwala.utility.helper.DateHelper.DateFormat.dd_MMM_yyyy;
 public class DateHelper {
 
     public interface DateFormat {
+        String dd_MMM_yy = "dd MMM, yy";
         String dd_MMM_yyyy = "dd MMM, yyyy";
         String HH_mm_a = "HH:mm a";
         String hh_mm = "hh:mm";
@@ -143,7 +144,7 @@ public class DateHelper {
 
     }
 
-    public String getDate(@NonNull Date targetDate, @NonNull String toFormat) {
+    public static String getDate(@NonNull Date targetDate, @NonNull String toFormat) {
 
         SimpleDateFormat dateFormatter = new SimpleDateFormat(toFormat, Locale.getDefault());
         Calendar targetCalendar = Calendar.getInstance(TimeZone.getDefault(), Locale.getDefault());
