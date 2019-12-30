@@ -36,7 +36,7 @@ public class IntentHelper {
     interface ErrorText {
         String locationNotAvailable = "Unable to redirect to google maps.";
         String linkNotAvailable = "Unable to share the link.";
-        String sharedVia = "%s\\n\\n- - - - - -\\nShared via %s";
+        String sharedVia = "%s\n\n- - - - - -\nShared via %s";
     }
 
     public static void checkLog(String TAG, Object data) {
