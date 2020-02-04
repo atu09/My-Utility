@@ -4,6 +4,8 @@ import android.annotation.SuppressLint;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.location.Address;
+import android.location.Geocoder;
 import android.location.Location;
 import android.os.IBinder;
 import android.os.Looper;
@@ -16,6 +18,9 @@ import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
+
+import java.util.List;
+import java.util.Locale;
 
 public class FusedLocationHelper extends Service {
 
@@ -128,5 +133,28 @@ public class FusedLocationHelper extends Service {
     @Override
     public IBinder onBind(Intent arg0) {
         return null;
+    }
+
+    public static Address getGeoAddress(Context context, Location position, String language) {
+        try {
+            Geocoder geocoder = new Geocoder(context, new Locale(language));
+            List<Address> addresses = geocoder.getFromLocation(position.getLatitude(), position.getLongitude(), 1);
+            if (addresses != null && !addresses.isEmpty()) {
+                return addresses.get(0);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public static String getDistance(Location current, Location target) {
+        try {
+            return DistanceFormatter.formatKilometers(current.distanceTo(target), false);
+        } catch (Exception e) {
+            return "";
+        }
+
     }
 }

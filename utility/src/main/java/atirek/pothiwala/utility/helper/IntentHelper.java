@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.net.Uri;
@@ -20,7 +21,9 @@ import android.view.Window;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
+import java.text.NumberFormat;
 import java.util.ArrayList;
+import java.util.Currency;
 import java.util.List;
 import java.util.Locale;
 
@@ -35,7 +38,8 @@ public class IntentHelper {
     interface ErrorText {
         String locationNotAvailable = "Unable to redirect to google maps.";
         String linkNotAvailable = "Unable to share the link.";
-        String sharedVia = "%s\\n\\n- - - - - -\\nShared via %s";
+        String sharedVia = "%s\n\n- - - - - -\nShared via %s";
+        String noWhatsApp = "Your device might not have WhatsApp installed.";
     }
 
     public static void checkLog(String TAG, Object data) {
@@ -95,6 +99,30 @@ public class IntentHelper {
         sendIntent.putExtra(Intent.EXTRA_TEXT, text);
         context.startActivity(sendIntent);
 
+    }
+
+    public static void openWhatsApp(Context context, String mobile) {
+
+        try {
+            PackageManager packageManager = context.getPackageManager();
+            PackageInfo info = packageManager.getPackageInfo("com.whatsapp", PackageManager.GET_META_DATA);
+            if (info != null) {
+                IntentHelper.openBrowser(context, String.format(Locale.getDefault(), "https://api.whatsapp.com/send?phone=91%s", mobile));
+            } else {
+                IntentHelper.popToast(context, ErrorText.noWhatsApp);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            IntentHelper.popToast(context, ErrorText.noWhatsApp);
+
+        }
+    }
+
+    public static String currencyFormat(String text, String currencyCode) {
+        NumberFormat format = NumberFormat.getCurrencyInstance(Locale.ENGLISH);
+        format.setCurrency(Currency.getInstance(currencyCode));
+        format.setMaximumFractionDigits(0);
+        return format.format(Double.valueOf(text));
     }
 
     public static void closeKeyboard(Context context, Dialog dialog) {
