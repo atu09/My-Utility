@@ -81,6 +81,7 @@ public class NotificationHelper {
 
             NotificationCompat.Builder builder = new NotificationCompat.Builder(context, channelId);
             builder.setContentTitle(title)
+                    .setStyle(new NotificationCompat.BigTextStyle().bigText(message))
                     .setContentText(message)
                     .setSmallIcon(icon)
                     .setSound(sound)
