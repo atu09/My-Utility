@@ -7,7 +7,7 @@ import android.content.Intent;
 import android.location.Location;
 import android.os.IBinder;
 import android.os.Looper;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 import android.util.Log;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -16,8 +16,6 @@ import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
-
-import atirek.pothiwala.utility.BuildConfig;
 
 public class FusedLocationHelper extends Service {
 

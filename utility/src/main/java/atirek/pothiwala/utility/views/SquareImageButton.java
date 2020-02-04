@@ -2,7 +2,7 @@ package atirek.pothiwala.utility.views;
 
 import android.content.Context;
 import android.os.Build;
-import android.support.v7.widget.AppCompatImageButton;
+import androidx.appcompat.widget.AppCompatImageButton;
 import android.util.AttributeSet;
 
 

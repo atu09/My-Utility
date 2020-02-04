@@ -10,10 +10,10 @@ import android.content.res.Resources;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.ActivityOptionsCompat;
-import android.support.v4.util.Pair;
+import androidx.annotation.NonNull;
+import androidx.core.app.ActivityCompat;
+import androidx.core.app.ActivityOptionsCompat;
+import androidx.core.util.Pair;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
@@ -24,7 +24,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-import atirek.pothiwala.utility.BuildConfig;
 import atirek.pothiwala.utility.R;
 
 import static atirek.pothiwala.utility.helper.IntentHelper.ErrorText.linkNotAvailable;
