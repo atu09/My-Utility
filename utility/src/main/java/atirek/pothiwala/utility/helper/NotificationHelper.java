@@ -5,11 +5,13 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.media.AudioAttributes;
 import android.net.Uri;
 import android.os.Build;
 import android.provider.Settings;
+
 import androidx.annotation.ColorRes;
 import androidx.annotation.DrawableRes;
 import androidx.annotation.NonNull;
@@ -29,6 +31,9 @@ public class NotificationHelper {
     private @DrawableRes int icon;
     private Uri sound = Settings.System.DEFAULT_NOTIFICATION_URI;
     public static int requestCode = 2121;
+
+    private Bitmap bitmapImage;
+    private Intent intent;
 
     public NotificationHelper(Context context) {
         this.context = context;
@@ -74,14 +79,21 @@ public class NotificationHelper {
         }
     }
 
-    public void showNotification(@NonNull Integer notificationId, @NonNull String title, @NonNull String message, @Nullable Intent intent) {
+    public void setBitmapImage(@Nullable Bitmap bitmapImage) {
+        this.bitmapImage = bitmapImage;
+    }
+
+    public void setIntent(@Nullable Intent intent) {
+        this.intent = intent;
+    }
+
+    public void showNotification(@NonNull Integer notificationId, @NonNull String title, @NonNull String message) {
 
         if (notificationManager != null) {
             setChannel();
 
             NotificationCompat.Builder builder = new NotificationCompat.Builder(context, channelId);
             builder.setContentTitle(title)
-                    .setStyle(new NotificationCompat.BigTextStyle().bigText(message))
                     .setContentText(message)
                     .setSmallIcon(icon)
                     .setSound(sound)
@@ -89,7 +101,12 @@ public class NotificationHelper {
                     .setOnlyAlertOnce(true)
                     .setShowWhen(true);
 
-            if (intent != null){
+            if (bitmapImage != null) {
+                builder.setStyle(new NotificationCompat.BigPictureStyle().bigPicture(bitmapImage));
+            } else {
+                builder.setStyle(new NotificationCompat.BigTextStyle().bigText(message));
+            }
+            if (intent != null) {
                 PendingIntent pendingIntent = PendingIntent.getActivity(context, requestCode, intent, PendingIntent.FLAG_UPDATE_CURRENT);
                 builder.setContentIntent(pendingIntent);
             }
