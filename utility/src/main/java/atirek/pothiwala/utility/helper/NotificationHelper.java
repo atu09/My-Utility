@@ -17,13 +17,14 @@ import androidx.annotation.DrawableRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 
 import java.util.Locale;
 
 public class NotificationHelper {
 
     private Context context;
-    private NotificationManager notificationManager;
+    private NotificationManagerCompat notificationManager;
     private String channelId, channelName;
     private int color = Color.WHITE;
     private boolean lights = true;
@@ -39,7 +40,7 @@ public class NotificationHelper {
         this.context = context;
         this.channelId = String.format(Locale.getDefault(), "%s.channel.id", context.getPackageName());
         this.channelName = String.format(Locale.getDefault(), "%s.channel", context.getPackageName());
-        this.notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+        this.notificationManager = NotificationManagerCompat.from(context);
     }
 
     public void setColor(@ColorRes int color) {
@@ -102,9 +103,15 @@ public class NotificationHelper {
                     .setShowWhen(true);
 
             if (bitmapImage != null) {
-                builder.setStyle(new NotificationCompat.BigPictureStyle().bigPicture(bitmapImage));
+                NotificationCompat.BigPictureStyle style = new NotificationCompat.BigPictureStyle()
+                        .setBigContentTitle(title)
+                        .bigPicture(bitmapImage);
+                builder.setStyle(style);
             } else {
-                builder.setStyle(new NotificationCompat.BigTextStyle().bigText(message));
+                NotificationCompat.BigTextStyle style = new NotificationCompat.BigTextStyle()
+                        .setBigContentTitle(title)
+                        .bigText(message);
+                builder.setStyle(style);
             }
             if (intent != null) {
                 PendingIntent pendingIntent = PendingIntent.getActivity(context, requestCode, intent, PendingIntent.FLAG_UPDATE_CURRENT);
