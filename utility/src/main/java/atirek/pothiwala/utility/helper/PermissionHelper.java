@@ -10,8 +10,8 @@ public class PermissionHelper {
 
     public static boolean checkPermissions(Context context, String[] permissions) {
 
-        for (int i = 0; i < permissions.length; i++) {
-            if (ContextCompat.checkSelfPermission(context, permissions[i]) != PackageManager.PERMISSION_GRANTED) {
+        for (String permission : permissions) {
+            if (ContextCompat.checkSelfPermission(context, permission) != PackageManager.PERMISSION_GRANTED) {
                 return false;
             }
         }

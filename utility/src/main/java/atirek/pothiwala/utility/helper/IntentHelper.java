@@ -11,52 +11,48 @@ import android.content.res.Resources;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.core.app.ActivityOptionsCompat;
 import androidx.core.util.Pair;
-import android.util.Log;
+
+import android.text.TextUtils;
 import android.view.View;
 import android.view.Window;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
-import java.text.NumberFormat;
 import java.util.ArrayList;
-import java.util.Currency;
 import java.util.List;
 import java.util.Locale;
 
 import atirek.pothiwala.utility.R;
 
+import static atirek.pothiwala.utility.helper.IntentHelper.ErrorText.browserNotAvailable;
 import static atirek.pothiwala.utility.helper.IntentHelper.ErrorText.linkNotAvailable;
 import static atirek.pothiwala.utility.helper.IntentHelper.ErrorText.locationNotAvailable;
+import static atirek.pothiwala.utility.helper.IntentHelper.ErrorText.noWhatsApp;
+import static atirek.pothiwala.utility.helper.IntentHelper.ErrorText.phoneNumberNotAvailable;
 import static atirek.pothiwala.utility.helper.IntentHelper.ErrorText.sharedVia;
 
 public class IntentHelper {
 
     interface ErrorText {
-        String locationNotAvailable = "Unable to redirect to google maps.";
-        String linkNotAvailable = "Unable to share the link.";
+        String locationNotAvailable = "Invalid location, cannot redirect to the google maps.";
+        String linkNotAvailable = "Invalid link, cannot share it.";
+        String browserNotAvailable = "Invalid link, cannot redirect to the browser.";
+        String phoneNumberNotAvailable = "Invalid phone number, cannot make a call.";
         String sharedVia = "%s\n\n- - - - - -\nShared via %s";
         String noWhatsApp = "Your device might not have WhatsApp installed.";
     }
 
-    public static void checkLog(String TAG, Object data) {
-        Log.d(TAG + ">>", data.toString());
-    }
-
-    public static void popToast(Context context, Object data) {
-        try {
-            if (data != null && !data.toString().trim().isEmpty()) {
-                Toast.makeText(context, data.toString(), Toast.LENGTH_SHORT).show();
-            }
-        } catch (Exception e) {
-            checkLog("popToast>>", data.toString());
+    public static void phoneCall(@NonNull Context context, @Nullable String phoneNumber) {
+        if (TextUtils.isEmpty(phoneNumber)){
+            Toast.makeText(context, phoneNumberNotAvailable, Toast.LENGTH_SHORT).show();
+            return;
         }
-    }
-
-    public static void phoneCall(Context context, String phoneNumber) {
         String uri = "tel:" + phoneNumber.trim();
         Intent intent = new Intent(Intent.ACTION_CALL);
         intent.setData(Uri.parse(uri));
@@ -66,15 +62,19 @@ public class IntentHelper {
         context.startActivity(Intent.createChooser(intent, "Choose Call Engine"));
     }
 
-    public static void openBrowser(Context context, String url) {
+    public static void browser(@NonNull Context context, @Nullable String url) {
+        if (TextUtils.isEmpty(url)) {
+            Toast.makeText(context, browserNotAvailable, Toast.LENGTH_SHORT).show();
+            return;
+        }
         Intent intent = new Intent(Intent.ACTION_VIEW);
         intent.setData(Uri.parse(url));
         context.startActivity(intent);
     }
 
-    public static void openGoogleMaps(Context context, String direction) {
-        if (direction == null || direction.isEmpty()) {
-            popToast(context, locationNotAvailable);
+    public static void googleMaps(@NonNull Context context, @Nullable String direction) {
+        if (TextUtils.isEmpty(direction)) {
+            Toast.makeText(context, locationNotAvailable, Toast.LENGTH_SHORT).show();
             return;
         }
         Intent navigationIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("google.navigation:q=" + direction.trim() + "&mode=d"));
@@ -83,11 +83,11 @@ public class IntentHelper {
         context.startActivity(navigationIntent);
     }
 
-    public static void shareLink(Context context, String link) {
+    public static void shareLink(@NonNull Context context, @Nullable String link) {
 
         Resources resources = context.getResources();
-        if (link == null || link.isEmpty()) {
-            popToast(context, linkNotAvailable);
+        if (TextUtils.isEmpty(link)) {
+            Toast.makeText(context, linkNotAvailable, Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -101,31 +101,23 @@ public class IntentHelper {
 
     }
 
-    public static void openWhatsApp(Context context, String mobile) {
+    public static void whatsApp(Context context, String mobile) {
 
         try {
             PackageManager packageManager = context.getPackageManager();
             PackageInfo info = packageManager.getPackageInfo("com.whatsapp", PackageManager.GET_META_DATA);
             if (info != null) {
-                IntentHelper.openBrowser(context, String.format(Locale.getDefault(), "https://api.whatsapp.com/send?phone=91%s", mobile));
+                IntentHelper.browser(context, String.format(Locale.getDefault(), "https://api.whatsapp.com/send?phone=91%s", mobile));
             } else {
-                IntentHelper.popToast(context, ErrorText.noWhatsApp);
+                Toast.makeText(context, noWhatsApp, Toast.LENGTH_SHORT).show();
             }
         } catch (Exception e) {
             e.printStackTrace();
-            IntentHelper.popToast(context, ErrorText.noWhatsApp);
-
+            Toast.makeText(context, noWhatsApp, Toast.LENGTH_SHORT).show();
         }
     }
 
-    public static String currencyFormat(String text, String currencyCode) {
-        NumberFormat format = NumberFormat.getCurrencyInstance(Locale.ENGLISH);
-        format.setCurrency(Currency.getInstance(currencyCode));
-        format.setMaximumFractionDigits(0);
-        return format.format(Double.valueOf(text));
-    }
-
-    public static void closeKeyboard(Context context, Dialog dialog) {
+    public static void closeKeyboard(@NonNull Context context, @Nullable Dialog dialog) {
         InputMethodManager inputMethodManager = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
         if (inputMethodManager != null) {
             Window window = dialog != null ? dialog.getWindow() : ((Activity) context).getWindow();
@@ -135,7 +127,7 @@ public class IntentHelper {
         }
     }
 
-    public static void restartApp(Context context) {
+    public static void restart(@NonNull Context context) {
         Intent intent = context.getPackageManager().getLaunchIntentForPackage(context.getPackageName());
         if (intent != null) {
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
@@ -146,8 +138,8 @@ public class IntentHelper {
     public static Bundle startAnimate(@NonNull Activity activity, @NonNull View... view) {
         List<Pair<View, String>> pairs = new ArrayList<>();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            for (int i = 0; i < view.length; i++) {
-                pairs.add(new Pair<>(view[i], view[i].getTransitionName()));
+            for (View value : view) {
+                pairs.add(new Pair<>(value, value.getTransitionName()));
             }
         }
         Pair<View, String>[] pairArray = pairs.<Pair<View, String>>toArray(new Pair[pairs.size()]);

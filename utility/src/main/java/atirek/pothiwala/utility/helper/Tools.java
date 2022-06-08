@@ -3,20 +3,15 @@ package atirek.pothiwala.utility.helper;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
-import android.os.Build;
+
 import androidx.annotation.ColorRes;
 import androidx.annotation.DrawableRes;
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
+
 import android.util.DisplayMetrics;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.ImageView;
-
-import com.squareup.picasso.MemoryPolicy;
-import com.squareup.picasso.NetworkPolicy;
-import com.squareup.picasso.Picasso;
-import com.squareup.picasso.RequestCreator;
 
 /**
  * Created by Atirek Pothiwala on 11/27/2017.
@@ -44,38 +39,11 @@ public class Tools {
     }
 
     public static int getColor(Context context, @ColorRes int color) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            return context.getColor(color);
-        } else {
-            return context.getResources().getColor(color);
-        }
+        return ContextCompat.getColor(context, color);
     }
 
     public static Drawable getDrawable(Context context, @DrawableRes int drawable) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            return context.getDrawable(drawable);
-        } else {
-            return context.getResources().getDrawable(drawable);
-        }
-    }
-
-    public static void loadImage(@NonNull ImageView imageView, @Nullable String imageUrl, @DrawableRes int placeHolder, boolean isCache) {
-
-        Picasso.get().setIndicatorsEnabled(false);
-        if (imageUrl == null || imageUrl.isEmpty()) {
-            imageView.setImageResource(placeHolder);
-            return;
-        }
-        RequestCreator requestCreator = Picasso.get().load(imageUrl);
-        if (placeHolder == 0) {
-            requestCreator = requestCreator.noPlaceholder();
-        } else {
-            requestCreator = requestCreator.error(placeHolder).placeholder(placeHolder);
-        }
-        if (!isCache) {
-            requestCreator = requestCreator.memoryPolicy(MemoryPolicy.NO_CACHE, MemoryPolicy.NO_STORE).networkPolicy(NetworkPolicy.NO_CACHE, NetworkPolicy.NO_STORE);
-        }
-        requestCreator.into(imageView);
+        return ContextCompat.getDrawable(context, drawable);
     }
 
 }

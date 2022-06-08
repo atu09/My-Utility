@@ -1,6 +1,7 @@
 package atirek.pothiwala.utility.listener;
 
 import android.os.Handler;
+
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -23,15 +24,15 @@ public abstract class EndlessScrollListener extends RecyclerView.OnScrollListene
     // True if we are still waiting for the last set of data to load.
     private boolean isLoading = true;
     // Sets the starting page index
-    private int startingPageIndex = 0;
+    private final int startingPageIndex = 0;
     // Sets the delay time to load more data
     private int secondsToLoadMore = 2;
 
-    private RecyclerView.LayoutManager layoutManager;
+    private final RecyclerView.LayoutManager layoutManager;
 
-    private Handler handler;
+    private final Handler handler;
 
-    private Runnable loaderRunnable = new Runnable() {
+    private final Runnable loaderRunnable = new Runnable() {
         @Override
         public void run() {
             onLoadMore(currentPage, 0, null);
@@ -44,10 +45,10 @@ public abstract class EndlessScrollListener extends RecyclerView.OnScrollListene
 
     public void handleLoadingMore() {
         this.currentPage--;
-        if (this.currentPage < 0){
+        if (this.currentPage < 0) {
             this.currentPage = 0;
         }
-        handler.postDelayed(loaderRunnable, secondsToLoadMore * 1000);
+        handler.postDelayed(loaderRunnable, secondsToLoadMore * 1000L);
     }
 
     public EndlessScrollListener(RecyclerView.LayoutManager layoutManager) {

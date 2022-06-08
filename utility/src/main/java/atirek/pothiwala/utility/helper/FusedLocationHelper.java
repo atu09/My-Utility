@@ -9,7 +9,9 @@ import android.location.Geocoder;
 import android.location.Location;
 import android.os.IBinder;
 import android.os.Looper;
+
 import androidx.annotation.NonNull;
+
 import android.util.Log;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -30,12 +32,12 @@ public class FusedLocationHelper extends Service {
         void onLocationAvailability(boolean isAvailable);
     }
 
-    private Context context;
-    private String TAG;
-    private boolean enableDebug;
+    private final Context context;
+    private final String TAG;
+    private final boolean enableDebug;
 
     private void checkLog(Object data) {
-        if (enableDebug){
+        if (enableDebug) {
             Log.d(TAG + ">>", data.toString());
         }
     }
@@ -49,6 +51,7 @@ public class FusedLocationHelper extends Service {
     // The priority for location updates
     private int PRIORITY = LocationRequest.PRIORITY_HIGH_ACCURACY;
 
+    private LocationRequest locationRequest;
     private FusedLocationProviderClient locationProviderClient;
     private LocationListener listener;
 
@@ -74,23 +77,25 @@ public class FusedLocationHelper extends Service {
         this.DISPLACEMENT = metres;
     }
 
-    @SuppressLint("MissingPermission")
     public void initializeLocationProviders() {
         checkLog("Initialized");
-
-        LocationRequest locationRequest = LocationRequest.create();
+        locationRequest = LocationRequest.create();
         locationRequest.setPriority(PRIORITY);
         locationRequest.setInterval(TIME_INTERVAL);
         locationRequest.setFastestInterval(TIME_INTERVAL);
         locationRequest.setSmallestDisplacement(DISPLACEMENT);
+    }
 
+    @SuppressLint("MissingPermission")
+    public void startLocationUpdates() {
+        checkLog("Started");
         locationProviderClient = LocationServices.getFusedLocationProviderClient(context);
         locationProviderClient.requestLocationUpdates(locationRequest, locationCallback, Looper.myLooper());
     }
 
     LocationCallback locationCallback = new LocationCallback() {
         @Override
-        public void onLocationResult(LocationResult locationResult) {
+        public void onLocationResult(@NonNull LocationResult locationResult) {
             super.onLocationResult(locationResult);
 
             Location location = locationResult.getLastLocation();
@@ -101,10 +106,10 @@ public class FusedLocationHelper extends Service {
         }
 
         @Override
-        public void onLocationAvailability(LocationAvailability locationAvailability) {
+        public void onLocationAvailability(@NonNull LocationAvailability locationAvailability) {
             super.onLocationAvailability(locationAvailability);
 
-            boolean isAvailable = locationAvailability != null && locationAvailability.isLocationAvailable();
+            boolean isAvailable = locationAvailability.isLocationAvailable();
             if (listener != null) {
                 listener.onLocationAvailability(isAvailable);
             }
@@ -117,17 +122,11 @@ public class FusedLocationHelper extends Service {
         }
     };
 
-    void stopLocationUpdates() {
+    public void stopLocationUpdates() {
         checkLog("Stopped");
         if (locationProviderClient != null && locationCallback != null) {
             locationProviderClient.removeLocationUpdates(locationCallback);
         }
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        stopLocationUpdates();
     }
 
     @Override
@@ -147,14 +146,5 @@ public class FusedLocationHelper extends Service {
             e.printStackTrace();
         }
         return null;
-    }
-
-    public static String getDistance(Location current, Location target) {
-        try {
-            return DistanceFormatter.formatKilometers(current.distanceTo(target), false);
-        } catch (Exception e) {
-            return "";
-        }
-
     }
 }

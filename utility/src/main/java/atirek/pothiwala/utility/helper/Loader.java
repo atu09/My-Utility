@@ -15,8 +15,8 @@ import android.widget.RelativeLayout;
 
 public class Loader {
 
-    private Context context;
-    private Dialog dialog;
+    private final Context context;
+    private final Dialog dialog;
     private int color = Color.BLACK;
     private DialogInterface.OnCancelListener onCancelListener;
 

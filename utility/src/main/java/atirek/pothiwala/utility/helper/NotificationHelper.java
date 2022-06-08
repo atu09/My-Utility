@@ -23,15 +23,17 @@ import java.util.Locale;
 
 public class NotificationHelper {
 
-    private Context context;
-    private NotificationManagerCompat notificationManager;
-    private String channelId, channelName;
+    private final Context context;
+    private final NotificationManagerCompat notificationManager;
+    private final String channelId;
+    private final String channelName;
     private int color = Color.WHITE;
     private boolean lights = true;
     private boolean vibrations = true;
-    private @DrawableRes int icon;
+    private @DrawableRes
+    int icon;
     private Uri sound = Settings.System.DEFAULT_NOTIFICATION_URI;
-    public static int requestCode = 2121;
+    public static final int requestCode = 2121;
 
     private Bitmap bitmapImage;
     private Intent intent;
@@ -44,7 +46,7 @@ public class NotificationHelper {
     }
 
     public void setColor(@ColorRes int color) {
-        this.color = getColor(color);
+        this.color = Tools.getColor(context, color);
     }
 
     public void setLights(boolean lights) {
@@ -89,7 +91,6 @@ public class NotificationHelper {
     }
 
     public void showNotification(@NonNull Integer notificationId, @NonNull String title, @NonNull String message) {
-
         if (notificationManager != null) {
             setChannel();
 
@@ -132,13 +133,4 @@ public class NotificationHelper {
             notificationManager.cancel(notificationId);
         }
     }
-
-    private int getColor(@ColorRes int color) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            return context.getColor(color);
-        } else {
-            return context.getResources().getColor(color);
-        }
-    }
-
 }
