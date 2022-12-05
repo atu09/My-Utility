@@ -15,7 +15,7 @@ public class Session {
     private final SharedPreferences sharedPreferences;
     private String sessionKey;
 
-    private Session(Context context, String name) {
+    public Session(Context context, String name) {
         sharedPreferences = context.getSharedPreferences(name, Context.MODE_PRIVATE);
     }
 
