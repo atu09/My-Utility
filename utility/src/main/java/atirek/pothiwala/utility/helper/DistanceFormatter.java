@@ -14,13 +14,13 @@ import java.util.Locale;
  * <li>Distances under 10 feet return "now" in real-time (navigation) mode.</li>
  * </ul>
  */
-class DistanceFormatter {
+public class DistanceFormatter {
 
-    private DistanceFormatter() {
+    public DistanceFormatter() {
 
     }
 
-    static String formatKilometers(float distanceInMeters, boolean realTime) {
+    public static String formatKilometers(float distanceInMeters, boolean realTime) {
 
         if (distanceInMeters >= 100) {
             return formatDistanceInKilometers(distanceInMeters);
@@ -31,11 +31,11 @@ class DistanceFormatter {
         }
     }
 
-    private static String formatDistanceOverTenMeters(float distanceInMeters) {
+    public static String formatDistanceOverTenMeters(float distanceInMeters) {
         return String.format(Locale.getDefault(), "%s m", distanceInMeters);
     }
 
-    private static String formatShortMeters(float distanceInMeters, boolean realTime) {
+    public static String formatShortMeters(float distanceInMeters, boolean realTime) {
         if (realTime) {
             return "near by";
         } else {
@@ -43,7 +43,7 @@ class DistanceFormatter {
         }
     }
 
-    private static String formatDistanceInKilometers(float distanceInMeters) {
+    public static String formatDistanceInKilometers(float distanceInMeters) {
 
         DecimalFormat decimalFormat = (DecimalFormat) NumberFormat.getNumberInstance();
         decimalFormat.applyPattern("#.#");
