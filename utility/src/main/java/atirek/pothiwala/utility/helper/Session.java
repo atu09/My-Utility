@@ -36,7 +36,7 @@ public class Session {
             Iterator<String> keys = json.keys();
             while (keys.hasNext()) {
                 String key = keys.next();
-                editor.putString(keys.next(), json.getString(key));
+                editor.putString(key, json.getString(key));
             }
         } catch (Exception e) {
             e.printStackTrace();
