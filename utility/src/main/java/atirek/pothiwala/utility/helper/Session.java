@@ -5,10 +5,8 @@ import android.content.SharedPreferences;
 
 import org.json.JSONObject;
 
-
-/**
- * Created by Atirek Pothiwala on 10/17/2018.
- */
+import java.util.Iterator;
+import java.util.Map;
 
 public class Session {
 
@@ -18,28 +16,53 @@ public class Session {
         sharedPreferences = context.getSharedPreferences(name, Context.MODE_PRIVATE);
     }
 
-    public JSONObject getJson(String key) {
-        JSONObject jsonObject = new JSONObject();
-        try {
-            jsonObject = new JSONObject(sharedPreferences.getString(key, ""));
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return jsonObject;
+    public SharedPreferences getSharedPreferences() {
+        return sharedPreferences;
     }
-    
+
     public String get(String key) {
-        return sharedPreferences.getString(key, "")
+        return sharedPreferences.getString(key, "");
     }
-    
+
     public void set(String key, String value) {
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putString(key, value);
         editor.apply();
     }
-    
+
+    public void set(JSONObject json) {
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        try {
+            Iterator<String> keys = json.keys();
+            while (keys.hasNext()) {
+                String key = keys.next();
+                editor.putString(keys.next(), json.getString(key));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        editor.apply();
+    }
+
+    public JSONObject get() {
+        JSONObject jsonObject = new JSONObject();
+        Map<String, ?> keys = sharedPreferences.getAll();
+        try {
+            for (Map.Entry<String, ?> entry : keys.entrySet()) {
+                jsonObject.put(entry.getKey(), entry.getValue().toString());
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return jsonObject;
+    }
+
     public boolean exists(String key) {
         return sharedPreferences.contains(key);
+    }
+
+    public boolean exists() {
+        return !sharedPreferences.getAll().isEmpty();
     }
 
     public void clear() {
@@ -49,3 +72,4 @@ public class Session {
     }
 
 }
+
