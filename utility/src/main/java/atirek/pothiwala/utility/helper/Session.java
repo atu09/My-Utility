@@ -13,34 +13,33 @@ import org.json.JSONObject;
 public class Session {
 
     private final SharedPreferences sharedPreferences;
-    private String sessionKey;
 
     public Session(Context context, String name) {
         sharedPreferences = context.getSharedPreferences(name, Context.MODE_PRIVATE);
     }
 
-    public void setSessionKey(String sessionKey) {
-        this.sessionKey = sessionKey;
-    }
-
-    public void set(String json) {
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putString(sessionKey, json);
-        editor.apply();
-    }
-
-    public String get(String key) {
+    public JSONObject getJson(String key) {
+        JSONObject jsonObject = new JSONObject();
         try {
-            JSONObject jsonObject = new JSONObject(sharedPreferences.getString(sessionKey, ""));
-            return jsonObject.optString(key, "");
+            jsonObject = new JSONObject(sharedPreferences.getString(key, ""));
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return "";
+        return jsonObject;
     }
-
-    public boolean exists() {
-        return sharedPreferences.contains(sessionKey);
+    
+    public String get(String key) {
+        return sharedPreferences.getString(key, "")
+    }
+    
+    public void set(String key, String value) {
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString(key, value);
+        editor.apply();
+    }
+    
+    public boolean exists(String key) {
+        return sharedPreferences.contains(key);
     }
 
     public void clear() {
