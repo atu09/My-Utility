@@ -12,7 +12,7 @@ import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
 import android.view.View;
 
-class SpaceDecorate extends RecyclerView.ItemDecoration {
+public class SpaceDecorate extends RecyclerView.ItemDecoration {
 
     private final Context context;
     private int spaceVertical = 0, spaceHorizontal = 0, marginHorizontal = 0, marginVertical = 0;
