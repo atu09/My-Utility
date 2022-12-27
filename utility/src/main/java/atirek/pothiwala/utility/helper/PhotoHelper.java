@@ -22,22 +22,22 @@ public class PhotoHelper {
 
     public PhotoHelper(@Nullable String path) {
         Picasso.get().setIndicatorsEnabled(false);
-        requestCreator = Picasso.get().load(path).onlyScaleDown();
+        requestCreator = Picasso.get().load(path);
     }
 
     public PhotoHelper(@Nullable Uri uri) {
         Picasso.get().setIndicatorsEnabled(false);
-        requestCreator = Picasso.get().load(uri).onlyScaleDown();
+        requestCreator = Picasso.get().load(uri);
     }
 
     public PhotoHelper(@NonNull File file) {
         Picasso.get().setIndicatorsEnabled(false);
-        requestCreator = Picasso.get().load(file).onlyScaleDown();
+        requestCreator = Picasso.get().load(file);
     }
 
     public PhotoHelper(@DrawableRes int resourceId) {
         Picasso.get().setIndicatorsEnabled(false);
-        requestCreator = Picasso.get().load(resourceId).onlyScaleDown();
+        requestCreator = Picasso.get().load(resourceId);
     }
 
     public PhotoHelper placeholder(@DrawableRes int resourceId) {
